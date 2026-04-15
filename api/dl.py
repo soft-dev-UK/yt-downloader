@@ -55,7 +55,7 @@ class handler(BaseHTTPRequestHandler):
                 "socket_timeout": 20,
                 "extractor_args": {
                     "youtube": {
-                        "player_client": ["android", "web"]
+                        "player_client": ["ios"]
                     }
                 }
             }
