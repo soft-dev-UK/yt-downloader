@@ -1,0 +1,49 @@
+# ダウンロードされた動画ファイル
+downloads/
+
+# Node.js
+node_modules/
+package-lock.json
+
+# 旧サーバーファイル（ローカル版）
+server.py
+server.js
+public/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+*.egg-info/
+.eggs/
+dist/
+build/
+*.egg
+.venv/
+venv/
+env/
+
+# Vercel
+.vercel/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ログ
+*.log
+npm-debug.log*
+
+# 環境変数
+.env
+.env.local
+.env.production
+package.json

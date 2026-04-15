@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>YT Downloader — YouTube動画ダウンローダー</title>
+  <meta name="description" content="YouTubeのURLを貼り付けるだけで動画や音楽をダウンロードできる無料ツール" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- 背景パーティクル -->
+  <div class="bg-orbs">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+  </div>
+
+  <div class="container">
+    <!-- ヘッダー -->
+    <header class="header">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2z" fill="url(#grad)" />
+            <path d="M10 8l6 4-6 4V8z" fill="white" />
+            <defs>
+              <linearGradient id="grad" x1="2" y1="2" x2="22" y2="22" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#ff4e6a" />
+                <stop offset="1" stop-color="#ff6b35" />
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+        <span class="logo-text">YT<span class="logo-accent">Downloader</span></span>
+      </div>
+      <p class="tagline">YouTube動画を高品質でダウンロード</p>
+    </header>
+
+    <!-- メインカード -->
+    <main class="main-card" id="main-card">
+
+      <!-- Step 1: URL入力 -->
+      <section class="step" id="step-input">
+        <h1 class="step-title">動画URLを貼り付けてください</h1>
+        <p class="step-desc">YouTubeのURLを入力すると、動画情報を自動的に取得します</p>
+
+        <div class="input-group">
+          <div class="input-wrapper" id="input-wrapper">
+            <svg class="input-icon" viewBox="0 0 24 24" fill="none">
+              <path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <input
+              type="url"
+              id="url-input"
+              placeholder="https://www.youtube.com/watch?v=..."
+              autocomplete="off"
+              spellcheck="false"
+            />
+            <button class="paste-btn" id="paste-btn" title="クリップボードから貼り付け">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <rect x="8" y="2" width="8" height="4" rx="1" ry="1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+          <button class="fetch-btn" id="fetch-btn">
+            <span class="btn-text">動画を検索</span>
+            <svg class="btn-arrow" viewBox="0 0 24 24" fill="none">
+              <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="url-tips">
+          <span class="tip-label">対応URL例:</span>
+          <code>youtube.com/watch?v=...</code>
+          <code>youtu.be/...</code>
+          <code>youtube.com/shorts/...</code>
+        </div>
+      </section>
+
+      <!-- Step 2: 読み込み中 (動画情報取得 / URL取得でも共用) -->
+      <section class="step hidden" id="step-loading">
+        <div class="loading-anim">
+          <div class="spinner-ring"></div>
+          <div class="spinner-ring delay-1"></div>
+          <div class="spinner-ring delay-2"></div>
+        </div>
+        <p class="loading-text" id="loading-text">動画情報を取得中...</p>
+      </section>
+
+      <!-- Step 3: 動画情報 & ダウンロード選択 -->
+      <section class="step hidden" id="step-info">
+        <div class="video-card">
+          <div class="thumbnail-wrapper">
+            <img id="thumbnail" src="" alt="サムネイル" class="thumbnail" />
+            <div class="play-overlay">
+              <svg viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" fill="rgba(0,0,0,0.5)"/>
+                <path d="M10 8l6 4-6 4V8z" fill="white"/>
+              </svg>
+            </div>
+          </div>
+          <div class="video-meta">
+            <h2 class="video-title" id="video-title">タイトル</h2>
+            <div class="video-stats">
+              <span class="stat">
+                <svg viewBox="0 0 24 24" fill="none" class="stat-icon">
+                  <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/>
+                  <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span id="uploader-name">-</span>
+              </span>
+              <span class="stat">
+                <svg viewBox="0 0 24 24" fill="none" class="stat-icon">
+                  <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+                  <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span id="video-duration">-</span>
+              </span>
+              <span class="stat">
+                <svg viewBox="0 0 24 24" fill="none" class="stat-icon">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                <span id="video-views">-</span>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ダウンロードオプション -->
+        <div class="options-section">
+          <h3 class="options-title">ダウンロードオプション</h3>
+          <div class="options-grid">
+            <div class="option-group">
+              <label class="option-label">フォーマット</label>
+              <div class="toggle-group" id="format-toggle">
+                <button class="toggle-btn active" data-value="mp4" id="fmt-mp4">
+                  <svg viewBox="0 0 24 24" fill="none" class="toggle-icon">
+                    <rect x="2" y="4" width="20" height="16" rx="2" stroke="currentColor" stroke-width="2"/>
+                    <path d="M10 9l5 3-5 3V9z" fill="currentColor"/>
+                  </svg>
+                  動画 (MP4)
+                </button>
+                <button class="toggle-btn" data-value="mp3" id="fmt-mp3">
+                  <svg viewBox="0 0 24 24" fill="none" class="toggle-icon">
+                    <path d="M9 18V5l12-2v13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="6" cy="18" r="3" stroke="currentColor" stroke-width="2"/>
+                    <circle cx="18" cy="16" r="3" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                  音声 (M4A)
+                </button>
+              </div>
+            </div>
+
+            <div class="option-group" id="quality-group">
+              <label class="option-label">画質</label>
+              <div class="quality-list" id="quality-list">
+                <button class="quality-btn active" data-value="best">最高画質 (推奨)</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="action-row">
+          <button class="back-btn" id="back-btn">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M19 12H5M12 19l-7-7 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            戻る
+          </button>
+          <button class="download-btn" id="download-btn">
+            <svg class="download-icon" viewBox="0 0 24 24" fill="none">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="7,10 12,15 17,10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="12" y1="15" x2="12" y2="3" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+            ダウンロード開始
+          </button>
+        </div>
+      </section>
+
+      <!-- Step 4: URL取得中 -->
+      <section class="step hidden" id="step-fetching">
+        <div class="loading-anim">
+          <div class="spinner-ring"></div>
+          <div class="spinner-ring delay-1"></div>
+          <div class="spinner-ring delay-2"></div>
+        </div>
+        <p class="loading-text">ダウンロードURLを取得中...</p>
+        <p class="fetching-note">動画の長さによって20〜40秒かかる場合があります</p>
+      </section>
+
+      <!-- Step 5: 完了 -->
+      <section class="step hidden" id="step-done">
+        <div class="done-area">
+          <div class="done-icon-wrap">
+            <svg class="done-icon" viewBox="0 0 24 24" fill="none">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+              <path d="M8 12l3 3 5-5" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h2 class="done-title">準備完了！</h2>
+          <p class="done-desc">新しいタブでダウンロードが開始されました。<br>もし始まらない場合は下のボタンをクリックしてください。</p>
+
+          <div class="done-file-info">
+            <p class="done-filename" id="done-filename"></p>
+            <p class="done-filesize" id="done-filesize"></p>
+          </div>
+
+          <a class="save-btn" id="save-btn" href="#" target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <polyline points="7,10 12,15 17,10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="12" y1="15" x2="12" y2="3" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+            ダウンロードリンクを開く
+          </a>
+
+          <div class="done-hint">
+            <svg viewBox="0 0 24 24" fill="none" class="hint-icon">
+              <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+              <line x1="12" y1="8" x2="12" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              <line x1="12" y1="16" x2="12.01" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <span>動画が再生される場合は、右クリック →「名前を付けて保存」でダウンロードできます</span>
+          </div>
+
+          <button class="another-btn" id="another-btn">別の動画をダウンロード</button>
+        </div>
+      </section>
+
+      <!-- エラー表示 -->
+      <div class="error-toast hidden" id="error-toast">
+        <svg viewBox="0 0 24 24" fill="none" class="error-icon">
+          <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+          <line x1="12" y1="8" x2="12" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <line x1="12" y1="16" x2="12.01" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span id="error-message">エラーが発生しました</span>
+        <button class="error-close" id="error-close">✕</button>
+      </div>
+    </main>
+
+    <!-- フッター -->
+    <footer class="footer">
+      <p>個人利用の範囲内でご使用ください。著作権には十分ご注意ください。</p>
+    </footer>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
