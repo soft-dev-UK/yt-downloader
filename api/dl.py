@@ -53,6 +53,11 @@ class handler(BaseHTTPRequestHandler):
                 "format": format_selector,
                 "nocheckcertificate": True,
                 "socket_timeout": 20,
+                "extractor_args": {
+                    "youtube": {
+                        "player_client": ["android", "web"]
+                    }
+                }
             }
 
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:

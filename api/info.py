@@ -62,6 +62,11 @@ class handler(BaseHTTPRequestHandler):
                 "no_warnings": True,
                 "nocheckcertificate": True,
                 "socket_timeout": 20,
+                "extractor_args": {
+                    "youtube": {
+                        "player_client": ["android", "web"]
+                    }
+                }
             }
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 info = ydl.extract_info(url, download=False)
